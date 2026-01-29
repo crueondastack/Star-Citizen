@@ -44,9 +44,18 @@ if (Test-Path -Path $shaderParentPath) {
     
     if ($folders) {
         foreach ($folder in $folders) {
-            Remove-Item -Path $folder.FullName -Recurse -Force -ErrorAction SilentlyContinue
-            Write-Host "Deleted: $($folder.Name)" -ForegroundColor DarkGray
-        }
+            try {
+        # ErrorAction Stop ensures that if an error occurs, we jump immediately to the Catch block
+                Remove-Item -Path $folder.FullName -Recurse -Force -ErrorAction Stop
+        
+        # This line will ONLY run if the deletion above was successful
+                Write-Host "Deleted: $($folder.Name)" -ForegroundColor DarkGray
+            }
+            catch {
+        # This block runs if the deletion failed (e.g., file in use, permission denied)
+                    Write-Warning "Failed to delete: $($folder.Name). Reason: $($_.Exception.Message)"
+                }
+            }
         Write-Host "Shader cache cleanup complete." -ForegroundColor Green
     } else {
         Write-Host "No subfolders found to delete." -ForegroundColor Yellow
@@ -61,4 +70,5 @@ if ($launcherPath -and (Test-Path $launcherPath)) {
     Start-Process -FilePath $launcherPath
 } else {
     Write-Warning "Could not determine RSI Launcher path. Please start it manually."
+
 }
