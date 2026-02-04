@@ -1,4 +1,5 @@
-﻿# Check for Administrator privileges (Recommended for killing processes)
+# Author: crueondastack - 2026.02.03 - https://github.com/crueondastack/Star-Citizen
+# Check for Administrator privileges (Recommended for killing processes)
 if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
     Write-Warning "This script works best when run as Administrator to ensure processes are stopped correctly."
 }
@@ -72,3 +73,4 @@ if ($launcherPath -and (Test-Path $launcherPath)) {
     Write-Warning "Could not determine RSI Launcher path. Please start it manually."
 
 }
+
